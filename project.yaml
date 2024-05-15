@@ -5,8 +5,40 @@ expectations:
   population_size: 1000
 
 actions:
-  generate_dataset:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition.py --output output/dataset.csv.gz
+  extract_casim:
+    run: >
+      sqlrunner:latest
+        analysis/extract_casim05_risk_group.sql
+        --output output/casim05_risk_group.csv
+        --dummy-data-file analysis/dummy/casim05_risk_group.csv
     outputs:
-      highly_sensitive:
-        dataset: output/dataset.csv.gz
+      moderately_sensitive:
+        output: output/casim05_risk_group.csv
+
+  extract_sot:
+    run: >
+      sqlrunner:latest
+        analysis/extract_sot02_risk_group.sql
+        --output output/sot02_risk_group.csv
+        --dummy-data-file analysis/dummy/sot02_risk_group.csv
+    outputs:
+      moderately_sensitive:
+        output: output/sot02_risk_group.csv
+
+  extract_mol:
+    run: >
+      sqlrunner:latest
+        analysis/extract_mol1_risk_group.sql
+        --output output/mol1_risk_group.csv
+        --dummy-data-file analysis/dummy/mol1_risk_group.csv
+    outputs:
+      moderately_sensitive:
+        output: output/mol1_risk_group.csv
+  
+  parse_risk_groups:
+    needs: [extract_casim, extract_sot, extract_mol]
+    run: >
+      python:v1 analysis/parse_risk_groups.py
+    outputs:
+      moderately_sensitive:
+        output: output/risk_groups.csv
