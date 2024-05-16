@@ -36,8 +36,9 @@ def extract_risk_groups_from_file(input_file):
     risk_groups = set()
     for line in lines:
         for group in line.split("and"):
-            group = re.sub("Patients with a?", "", group)
-            risk_groups.add(group.strip().lower())
+            group = re.sub("Patients with a?", "", group).strip().lower()
+            if group:
+                risk_groups.add(group)
     return sorted(risk_groups)
 
 
