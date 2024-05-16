@@ -32,7 +32,7 @@ def extract_risk_groups_from_file(input_file):
     no disclosive free text data may be included, and used to ensure the following
     `ALLOWED_RISK_GROUPS` list is complete)
     """
-    lines = Path(input_file).read_text().strip().split("\n")
+    lines = Path(input_file).read_text().strip().split("\n")[1:]
     risk_groups = set()
     for line in lines:
         for group in line.split("and"):
@@ -70,13 +70,13 @@ def parse_groups():
         writer.writerows(
             [
                 {"current": risk_group, "cohort_extractor": ""}
-                for risk_group in current_only
+                for risk_group in current_only if risk_group
             ]
         )
         writer.writerows(
             [
                 {"current": "", "cohort_extractor": risk_group}
-                for risk_group in cohortextractor_only
+                for risk_group in cohortextractor_only if risk_group
             ]
         )
 
