@@ -35,10 +35,11 @@ def extract_risk_groups_from_file(input_file):
     lines = Path(input_file).read_text().strip().split("\n")[1:]
     risk_groups = set()
     for line in lines:
+        if line == '""':
+            continue
         for group in line.split("and"):
             group = re.sub("Patients with a?", "", group).strip().lower()
-            if group:
-                risk_groups.add(group)
+            risk_groups.add(group)
     return sorted(risk_groups)
 
 
